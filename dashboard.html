@@ -2,603 +2,690 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Game Analytics Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Analytics Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-:root {
-  --bg: #07080c;
-  --surface: #0d0f15;
-  --card: #111318;
-  --card2: #161820;
-  --border: #1c1f2a;
-  --border2: #252836;
-  --accent: #4ade80;
-  --accent2: #60a5fa;
-  --accent3: #f472b6;
-  --warn: #fb923c;
-  --text: #e2e8f0;
-  --muted: #475569;
-  --muted2: #64748b;
-  --mono: 'JetBrains Mono', monospace;
-  --sans: 'Syne', sans-serif;
-}
-* { margin:0; padding:0; box-sizing:border-box; }
-body { background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh; }
-body::before {
-  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-  background-image: linear-gradient(rgba(74,222,128,.02) 1px,transparent 1px), linear-gradient(90deg,rgba(74,222,128,.02) 1px,transparent 1px);
-  background-size:48px 48px;
-}
-.wrap { max-width:1440px; margin:0 auto; padding:1.5rem 2rem; position:relative; z-index:1; }
+:root{--bg:#080b12;--s:#0d1018;--c:#111520;--c2:#161c28;--b:#1a2035;--b2:#222840;--g:#22c55e;--bl:#3b82f6;--pk:#ec4899;--or:#f97316;--pu:#a855f7;--cy:#06b6d4;--r:#ef4444;--t:#e2e8f0;--m:#64748b;--m2:#475569;--mono:'JetBrains Mono',monospace;--sans:'Syne',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--t);font-family:var(--sans);min-height:100vh;font-size:14px}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(34,197,94,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(34,197,94,.025) 1px,transparent 1px);background-size:44px 44px}
+.w{max-width:1500px;margin:0 auto;padding:1.25rem 1.75rem;position:relative;z-index:1}
 
-/* ── nav ── */
-nav { display:flex; align-items:center; justify-content:space-between; padding-bottom:1.25rem; border-bottom:1px solid var(--border); margin-bottom:1.75rem; }
-.nav-left { display:flex; align-items:center; gap:.75rem; }
-.live-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); animation:blink 2s infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
-.nav-title { font-size:1.1rem; font-weight:800; letter-spacing:-.02em; }
-.nav-right { display:flex; align-items:center; gap:.75rem; }
-.badge { font-family:var(--mono); font-size:.65rem; padding:.25rem .6rem; border-radius:4px; letter-spacing:.08em; }
-.badge-green { background:rgba(74,222,128,.1); color:var(--accent); border:1px solid rgba(74,222,128,.2); }
-.badge-blue  { background:rgba(96,165,250,.1); color:var(--accent2); border:1px solid rgba(96,165,250,.2); }
-.tab-bar { display:flex; gap:.25rem; background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:3px; }
-.tab { font-family:var(--mono); font-size:.65rem; padding:.35rem .9rem; border-radius:4px; cursor:pointer; color:var(--muted2); border:none; background:transparent; transition:all .15s; letter-spacing:.06em; }
-.tab.active { background:var(--card2); color:var(--text); }
-.tab:hover:not(.active) { color:var(--text); }
-.btn { font-family:var(--mono); font-size:.65rem; padding:.35rem .9rem; border-radius:4px; cursor:pointer; color:var(--muted2); border:1px solid var(--border2); background:var(--card); transition:all .15s; }
-.btn:hover { color:var(--accent); border-color:var(--accent); }
+/* nav */
+nav{display:flex;align-items:center;justify-content:space-between;padding-bottom:1rem;border-bottom:1px solid var(--b);margin-bottom:1.5rem;flex-wrap:wrap;gap:.75rem}
+.nl{display:flex;align-items:center;gap:.75rem}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--g);animation:blink 2s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.nt{font-size:1rem;font-weight:800;letter-spacing:-.02em}
+.nr{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.tabs{display:flex;gap:2px;background:var(--s);border:1px solid var(--b);border-radius:6px;padding:3px}
+.tab{font-family:var(--mono);font-size:.6rem;padding:.3rem .8rem;border-radius:4px;cursor:pointer;color:var(--m);border:none;background:transparent;transition:all .15s;letter-spacing:.06em;white-space:nowrap}
+.tab.on{background:var(--c2);color:var(--t)}
+.tab:hover:not(.on){color:var(--t)}
+.nbadge{font-family:var(--mono);font-size:.6rem;padding:.2rem .55rem;border-radius:4px;border:1px solid}
+.nbadge.g{background:rgba(34,197,94,.1);color:var(--g);border-color:rgba(34,197,94,.25)}
+.nbadge.b{background:rgba(59,130,246,.1);color:var(--bl);border-color:rgba(59,130,246,.25)}
+.nbadge.r{background:rgba(239,68,68,.1);color:var(--r);border-color:rgba(239,68,68,.25)}
+btn,.btn{font-family:var(--mono);font-size:.6rem;padding:.3rem .8rem;border-radius:4px;cursor:pointer;color:var(--m);border:1px solid var(--b2);background:var(--c);transition:all .15s;white-space:nowrap}
+.btn:hover{color:var(--g);border-color:var(--g)}
+.btn-r{color:var(--r)!important;border-color:rgba(239,68,68,.3)!important}
+.btn-r:hover{background:rgba(239,68,68,.08)!important}
+.btn-g{color:var(--g)!important;border-color:rgba(34,197,94,.3)!important}
+.btn-b{color:var(--bl)!important;border-color:rgba(59,130,246,.3)!important}
+.btn-o{color:var(--or)!important;border-color:rgba(249,115,22,.3)!important}
 
-/* ── stat cards ── */
-.stat-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:.75rem; margin-bottom:1.5rem; }
-.stat { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1rem 1.25rem; position:relative; overflow:hidden; }
-.stat::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
-.stat.green::before { background:linear-gradient(90deg,var(--accent),transparent); }
-.stat.blue::before  { background:linear-gradient(90deg,var(--accent2),transparent); }
-.stat.pink::before  { background:linear-gradient(90deg,var(--accent3),transparent); }
-.stat.warn::before  { background:linear-gradient(90deg,var(--warn),transparent); }
-.stat-label { font-family:var(--mono); font-size:.6rem; color:var(--muted); letter-spacing:.1em; text-transform:uppercase; margin-bottom:.4rem; }
-.stat-val { font-size:1.75rem; font-weight:800; line-height:1; letter-spacing:-.03em; }
-.stat-val.green { color:var(--accent); }
-.stat-val.blue  { color:var(--accent2); }
-.stat-val.pink  { color:var(--accent3); }
-.stat-val.warn  { color:var(--warn); }
-.stat-sub { font-family:var(--mono); font-size:.6rem; color:var(--muted); margin-top:.35rem; }
+/* stat cards */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.65rem;margin-bottom:1.25rem}
+.sc{background:var(--c);border:1px solid var(--b);border-radius:7px;padding:.9rem 1.1rem;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.sc.g::before{background:linear-gradient(90deg,var(--g),transparent)}
+.sc.bl::before{background:linear-gradient(90deg,var(--bl),transparent)}
+.sc.pk::before{background:linear-gradient(90deg,var(--pk),transparent)}
+.sc.or::before{background:linear-gradient(90deg,var(--or),transparent)}
+.sc.pu::before{background:linear-gradient(90deg,var(--pu),transparent)}
+.sc.cy::before{background:linear-gradient(90deg,var(--cy),transparent)}
+.sc-l{font-family:var(--mono);font-size:.55rem;color:var(--m);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.35rem}
+.sc-v{font-size:1.6rem;font-weight:800;line-height:1;letter-spacing:-.03em}
+.sc-v.g{color:var(--g)}.sc-v.bl{color:var(--bl)}.sc-v.pk{color:var(--pk)}.sc-v.or{color:var(--or)}.sc-v.pu{color:var(--pu)}.sc-v.cy{color:var(--cy)}
+.sc-s{font-family:var(--mono);font-size:.55rem;color:var(--m);margin-top:.3rem}
 
-/* ── panels ── */
-.panel { background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:1.25rem; }
-.panel-head { display:flex; align-items:center; justify-content:space-between; padding:.85rem 1.25rem; border-bottom:1px solid var(--border); background:var(--surface); }
-.panel-title { font-family:var(--mono); font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; }
-.panel-meta { font-family:var(--mono); font-size:.6rem; color:var(--muted); }
-.panel-body { padding:1.25rem; }
+/* panels */
+.p{background:var(--c);border:1px solid var(--b);border-radius:7px;overflow:hidden;margin-bottom:1rem}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.1rem;border-bottom:1px solid var(--b);background:var(--s)}
+.pt{font-family:var(--mono);font-size:.6rem;letter-spacing:.09em;text-transform:uppercase;color:var(--t)}
+.pm{font-family:var(--mono);font-size:.57rem;color:var(--m)}
+.pb{padding:1.1rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+@media(max-width:900px){.g2,.g3{grid-template-columns:1fr}}
 
-/* ── two col ── */
-.two-col { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; }
-@media(max-width:1000px){ .two-col { grid-template-columns:1fr; } }
-.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.25rem; }
-@media(max-width:1100px){ .three-col { grid-template-columns:1fr; } }
+/* charts */
+.cw{position:relative;width:100%}
 
-/* ── chart wrapper ── */
-.chart-wrap { position:relative; width:100%; }
+/* table */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-family:var(--mono);font-size:.55rem;color:var(--m);letter-spacing:.09em;text-transform:uppercase;padding:.45rem .9rem;text-align:left;border-bottom:1px solid var(--b)}
+.tbl td{padding:.55rem .9rem;font-family:var(--mono);font-size:.68rem;border-bottom:1px solid rgba(26,32,53,.6);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(34,197,94,.02)}
+.tn{color:var(--bl);font-weight:600}.tid{color:var(--m);font-size:.58rem}
+.pill{display:inline-block;padding:.08rem .4rem;border-radius:3px;font-size:.57rem;font-family:var(--mono);border:1px solid}
+.pg{background:rgba(34,197,94,.1);color:var(--g);border-color:rgba(34,197,94,.25)}
+.pb2{background:rgba(59,130,246,.1);color:var(--bl);border-color:rgba(59,130,246,.25)}
+.pr{background:rgba(239,68,68,.1);color:var(--r);border-color:rgba(239,68,68,.25)}
+.po{background:rgba(249,115,22,.1);color:var(--or);border-color:rgba(249,115,22,.25)}
+.ppu{background:rgba(168,85,247,.1);color:var(--pu);border-color:rgba(168,85,247,.25)}
 
-/* ── table ── */
-.tbl { width:100%; border-collapse:collapse; }
-.tbl th { font-family:var(--mono); font-size:.58rem; color:var(--muted); letter-spacing:.1em; text-transform:uppercase; padding:.5rem 1rem; text-align:left; border-bottom:1px solid var(--border); }
-.tbl td { padding:.65rem 1rem; font-family:var(--mono); font-size:.72rem; border-bottom:1px solid rgba(28,31,42,.5); vertical-align:middle; }
-.tbl tr:last-child td { border-bottom:none; }
-.tbl tr:hover td { background:rgba(74,222,128,.02); }
-.name-cell { color:var(--accent2); font-weight:600; }
-.id-cell  { color:var(--muted); font-size:.6rem; }
-.pill { display:inline-block; padding:.1rem .45rem; border-radius:3px; font-size:.6rem; }
-.pill-green { background:rgba(74,222,128,.1); color:var(--accent); border:1px solid rgba(74,222,128,.2); }
-.pill-blue  { background:rgba(96,165,250,.1); color:var(--accent2); border:1px solid rgba(96,165,250,.2); }
-.pill-warn  { background:rgba(251,146,60,.1); color:var(--warn); border:1px solid rgba(251,146,60,.2); }
+/* feed */
+.feed{max-height:320px;overflow-y:auto}
+.feed::-webkit-scrollbar{width:3px}
+.feed::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+.ev{display:flex;align-items:flex-start;gap:.55rem;padding:.55rem 1.1rem;border-bottom:1px solid rgba(26,32,53,.5)}
+.ev:last-child{border-bottom:none}
+.evd{width:5px;height:5px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.evb{flex:1;min-width:0}
+.evt{font-family:var(--mono);font-size:.55rem;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.12rem}
+.evx{font-family:var(--mono);font-size:.67rem;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.evt2{font-family:var(--mono);font-size:.55rem;color:var(--m);white-space:nowrap}
 
-/* ── event feed ── */
-.feed { max-height:380px; overflow-y:auto; }
-.feed::-webkit-scrollbar { width:3px; }
-.feed::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
-.ev { display:flex; align-items:flex-start; gap:.6rem; padding:.6rem 1.25rem; border-bottom:1px solid rgba(28,31,42,.5); }
-.ev:last-child { border-bottom:none; }
-.ev-dot { width:5px; height:5px; border-radius:50%; margin-top:5px; flex-shrink:0; }
-.ev-body { flex:1; min-width:0; }
-.ev-type { font-family:var(--mono); font-size:.58rem; text-transform:uppercase; letter-spacing:.07em; margin-bottom:.15rem; }
-.ev-desc { font-family:var(--mono); font-size:.7rem; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.ev-time { font-family:var(--mono); font-size:.58rem; color:var(--muted); white-space:nowrap; }
+/* funnel */
+.fstep{display:flex;align-items:center;gap:.75rem;margin-bottom:.65rem}
+.fl{font-family:var(--mono);font-size:.65rem;width:150px;flex-shrink:0;color:var(--t)}
+.fbw{flex:1;background:var(--b);border-radius:3px;height:26px;overflow:hidden;position:relative}
+.fb{height:100%;border-radius:3px;display:flex;align-items:center;padding:0 .55rem;transition:width .5s ease}
+.fp{font-family:var(--mono);font-size:.58rem;font-weight:600}
+.fdrop{font-family:var(--mono);font-size:.58rem;color:var(--m);width:55px;text-align:right;flex-shrink:0}
 
-/* ── funnel ── */
-.funnel-step { display:flex; align-items:center; gap:1rem; margin-bottom:.75rem; }
-.funnel-label { font-family:var(--mono); font-size:.68rem; color:var(--text); width:160px; flex-shrink:0; }
-.funnel-bar-wrap { flex:1; background:var(--border); border-radius:3px; height:28px; overflow:hidden; position:relative; }
-.funnel-bar { height:100%; border-radius:3px; display:flex; align-items:center; padding:0 .6rem; transition:width .6s ease; }
-.funnel-pct { font-family:var(--mono); font-size:.6rem; color:var(--card); font-weight:600; }
-.funnel-drop { font-family:var(--mono); font-size:.6rem; color:var(--muted); width:60px; text-align:right; flex-shrink:0; }
+/* modals / forms */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:flex;align-items:center;justify-content:center}
+.modal{background:var(--c2);border:1px solid var(--b2);border-radius:10px;padding:1.5rem;width:420px;max-width:95vw}
+.modal h3{font-size:.9rem;font-weight:700;margin-bottom:1rem;color:var(--t)}
+.field{margin-bottom:.75rem}
+.field label{font-family:var(--mono);font-size:.6rem;color:var(--m);display:block;margin-bottom:.3rem;letter-spacing:.06em}
+.field input,.field select,.field textarea{width:100%;font-family:var(--mono);font-size:.7rem;background:var(--c);border:1px solid var(--b2);color:var(--t);padding:.45rem .7rem;border-radius:5px;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--bl)}
+.field textarea{resize:vertical;min-height:60px}
+.mrow{display:flex;gap:.5rem;margin-top:1rem;justify-content:flex-end}
 
-/* ── player lookup ── */
-.search-row { display:flex; gap:.75rem; margin-bottom:1.25rem; }
-.search-input { flex:1; font-family:var(--mono); font-size:.75rem; background:var(--card2); border:1px solid var(--border2); color:var(--text); padding:.55rem .9rem; border-radius:6px; outline:none; }
-.search-input:focus { border-color:var(--accent2); }
-.search-btn { font-family:var(--mono); font-size:.7rem; background:rgba(96,165,250,.12); color:var(--accent2); border:1px solid rgba(96,165,250,.25); padding:.55rem 1.2rem; border-radius:6px; cursor:pointer; }
-.player-card { background:var(--card2); border:1px solid var(--border2); border-radius:8px; padding:1.25rem; }
-.pc-header { display:flex; align-items:center; gap:1rem; margin-bottom:1rem; padding-bottom:1rem; border-bottom:1px solid var(--border); }
-.pc-avatar { width:44px; height:44px; border-radius:50%; background:rgba(96,165,250,.15); border:1px solid rgba(96,165,250,.3); display:flex; align-items:center; justify-content:center; font-size:.85rem; font-weight:700; color:var(--accent2); flex-shrink:0; }
-.pc-name { font-size:1rem; font-weight:700; color:var(--text); }
-.pc-id { font-family:var(--mono); font-size:.62rem; color:var(--muted); margin-top:.2rem; }
-.pc-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem; margin-bottom:1rem; }
-.pc-stat { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:.75rem; }
-.pc-stat-label { font-family:var(--mono); font-size:.58rem; color:var(--muted); letter-spacing:.08em; margin-bottom:.3rem; }
-.pc-stat-val { font-size:1.2rem; font-weight:700; color:var(--accent); }
-.pc-timeline { display:flex; flex-direction:column; gap:.4rem; max-height:180px; overflow-y:auto; }
-.pc-ev { font-family:var(--mono); font-size:.65rem; color:var(--muted2); padding:.3rem 0; border-bottom:1px solid rgba(28,31,42,.5); }
-.pc-ev span { color:var(--text); }
+/* lookup */
+.sinput{font-family:var(--mono);font-size:.72rem;background:var(--c2);border:1px solid var(--b2);color:var(--t);padding:.5rem .85rem;border-radius:5px;outline:none;flex:1}
+.sinput:focus{border-color:var(--bl)}
+.srow{display:flex;gap:.6rem;margin-bottom:1rem}
+.pc{background:var(--c2);border:1px solid var(--b2);border-radius:8px;padding:1.25rem}
+.pch{display:flex;align-items:center;gap:.85rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--b)}
+.pcav{width:42px;height:42px;border-radius:50%;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--bl);flex-shrink:0}
+.pcn{font-size:.95rem;font-weight:700}.pcid{font-family:var(--mono);font-size:.58rem;color:var(--m);margin-top:.15rem}
+.pcsg{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1rem}
+.pcs{background:var(--c);border:1px solid var(--b);border-radius:5px;padding:.65rem}
+.pcsl{font-family:var(--mono);font-size:.55rem;color:var(--m);letter-spacing:.07em;margin-bottom:.25rem}
+.pcsv{font-size:1.1rem;font-weight:700;color:var(--g)}
+.pcmod{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}
+.pctl{max-height:160px;overflow-y:auto}
+.pcev{font-family:var(--mono);font-size:.62rem;color:var(--m2);padding:.28rem 0;border-bottom:1px solid rgba(26,32,53,.5)}
+.pcev span{color:var(--t)}
 
-/* ── retention grid ── */
-.ret-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
-.ret-cell { aspect-ratio:1; border-radius:3px; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:.55rem; color:var(--muted); cursor:default; }
-.ret-header { font-family:var(--mono); font-size:.58rem; color:var(--muted); text-align:center; padding-bottom:4px; letter-spacing:.06em; }
+/* action breakdown */
+.abar{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem}
+.abl{font-family:var(--mono);font-size:.62rem;color:var(--t);width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}
+.abw{flex:1;background:var(--b);border-radius:2px;height:14px;overflow:hidden}
+.abf{height:100%;border-radius:2px;background:rgba(59,130,246,.4);border-right:2px solid var(--bl)}
+.abv{font-family:var(--mono);font-size:.58rem;color:var(--m);width:40px;text-align:right;flex-shrink:0}
 
-/* ── loading / empty ── */
-.empty { padding:2.5rem; text-align:center; font-family:var(--mono); font-size:.7rem; color:var(--muted); }
-#splash { position:fixed; inset:0; background:var(--bg); z-index:999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; }
-.splash-text { font-family:var(--mono); font-size:.7rem; color:var(--accent); letter-spacing:.15em; animation:blink 1s infinite; }
-.splash-bar { width:180px; height:2px; background:var(--border); border-radius:2px; overflow:hidden; }
-.splash-fill { height:100%; background:var(--accent); animation:sweep 1.4s ease-in-out infinite; }
-@keyframes sweep { 0%{width:0;margin-left:0} 50%{width:60%;margin-left:20%} 100%{width:0;margin-left:100%} }
+/* live players */
+.lpp{display:flex;flex-wrap:wrap;gap:.4rem;padding:1rem}
+.lptag{font-family:var(--mono);font-size:.62rem;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);color:var(--g);padding:.2rem .55rem;border-radius:4px}
 
-/* ── section visibility ── */
-.section { display:none; }
-.section.active { display:block; }
+/* empty */
+.empty{padding:2rem;text-align:center;font-family:var(--mono);font-size:.65rem;color:var(--m)}
+
+/* splash */
+#splash{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.85rem}
+.spt{font-family:var(--mono);font-size:.65rem;color:var(--g);letter-spacing:.15em;animation:blink 1s infinite}
+.spb{width:160px;height:2px;background:var(--b);border-radius:2px;overflow:hidden}
+.spf{height:100%;background:var(--g);animation:sw 1.4s ease-in-out infinite}
+@keyframes sw{0%{width:0;margin-left:0}50%{width:60%;margin-left:20%}100%{width:0;margin-left:100%}}
+
+.sec{display:none}.sec.on{display:block}
+
+/* broadcast bar */
+.bcast{background:var(--c);border:1px solid var(--b);border-radius:7px;padding:.85rem 1.1rem;margin-bottom:1rem;display:flex;gap:.6rem;align-items:center}
+.bcast input{flex:1;font-family:var(--mono);font-size:.7rem;background:var(--c2);border:1px solid var(--b2);color:var(--t);padding:.4rem .7rem;border-radius:5px;outline:none}
+.bcast input:focus{border-color:var(--pu)}
+
+/* controls grid */
+.ctrlgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem}
+.ctrl{background:var(--c2);border:1px solid var(--b2);border-radius:7px;padding:.9rem 1.1rem}
+.ctrl-t{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--m);margin-bottom:.65rem}
+.ctrl input,.ctrl select{width:100%;font-family:var(--mono);font-size:.68rem;background:var(--c);border:1px solid var(--b2);color:var(--t);padding:.38rem .6rem;border-radius:4px;outline:none;margin-bottom:.5rem}
+
+/* retention cells */
+.rcell{font-family:var(--mono);font-size:.65rem;padding:.35rem .6rem;border-radius:4px;display:inline-block}
 </style>
 </head>
 <body>
 
-<div id="splash">
-  <div class="splash-text">LOADING ANALYTICS</div>
-  <div class="splash-bar"><div class="splash-fill"></div></div>
+<div id="splash"><div class="spt">LOADING ANALYTICS</div><div class="spb"><div class="spf"></div></div></div>
+
+<div class="w" id="app" style="display:none">
+<nav>
+  <div class="nl">
+    <div class="dot"></div>
+    <span class="nt" id="gname">Dashboard</span>
+    <span class="nbadge g" id="abadge">0 online</span>
+    <span class="nbadge b" id="ubadge">0 unique</span>
+    <span class="nbadge r" id="modbadge" style="display:none">0 banned</span>
+  </div>
+  <div class="nr">
+    <div class="tabs">
+      <button class="tab on" onclick="go('overview')">Overview</button>
+      <button class="tab" onclick="go('players')">Players</button>
+      <button class="tab" onclick="go('funnel')">Funnel</button>
+      <button class="tab" onclick="go('lookup')">Lookup</button>
+      <button class="tab" onclick="go('moderation')">Moderation</button>
+      <button class="tab" onclick="go('controls')">Controls</button>
+    </div>
+    <button class="btn" onclick="load()">↻</button>
+  </div>
+</nav>
+
+<!-- ══ OVERVIEW ══ -->
+<div class="sec on" id="sec-overview">
+  <div class="sgrid" id="sgrid"></div>
+  <div class="g2">
+    <div class="p"><div class="ph"><span class="pt">Sessions / hour</span><span class="pm" id="chmeta"></span></div><div class="pb"><div class="cw" style="height:200px"><canvas id="c-sess" role="img" aria-label="Sessions per hour"></canvas></div></div></div>
+    <div class="p"><div class="ph"><span class="pt">Live players</span><span class="pm" id="lp-count">0 online</span></div><div class="lpp" id="lp-list"><span style="font-family:var(--mono);font-size:.62rem;color:var(--m);padding:.5rem">Nobody online</span></div></div>
+  </div>
+  <div class="g2">
+    <div class="p"><div class="ph"><span class="pt">Live event feed</span><span class="pm" id="evcnt">0</span></div><div class="feed" id="ev-feed"><div class="empty">No events yet</div></div></div>
+    <div class="p"><div class="ph"><span class="pt">Top interactions</span></div><div class="pb" id="ab-body"><div class="empty">No interactions yet</div></div></div>
+  </div>
 </div>
 
-<div class="wrap" id="app" style="display:none">
-
-  <nav>
-    <div class="nav-left">
-      <div class="live-dot"></div>
-      <span class="nav-title" id="game-name">Analytics</span>
-      <span class="badge badge-green" id="active-badge">0 online</span>
-    </div>
-    <div class="nav-right">
-      <div class="tab-bar">
-        <button class="tab active" onclick="showTab('overview')">Overview</button>
-        <button class="tab" onclick="showTab('players')">Players</button>
-        <button class="tab" onclick="showTab('funnel')">Funnel</button>
-        <button class="tab" onclick="showTab('lookup')">Lookup</button>
-      </div>
-      <button class="btn" onclick="loadData()">↻ Refresh</button>
-    </div>
-  </nav>
-
-  <!-- ══ OVERVIEW ══ -->
-  <div class="section active" id="sec-overview">
-    <div class="stat-row" id="stat-row"></div>
-    <div class="two-col">
-      <div class="panel">
-        <div class="panel-head"><span class="panel-title">Sessions over time</span><span class="panel-meta" id="chart-meta"></span></div>
-        <div class="panel-body"><div class="chart-wrap" style="height:220px"><canvas id="sessionsChart" role="img" aria-label="Sessions over time bar chart"></canvas></div></div>
-      </div>
-      <div class="panel">
-        <div class="panel-head"><span class="panel-title">Avg session length</span></div>
-        <div class="panel-body"><div class="chart-wrap" style="height:220px"><canvas id="avgChart" role="img" aria-label="Average session length chart"></canvas></div></div>
-      </div>
-    </div>
-    <div class="two-col">
-      <div class="panel">
-        <div class="panel-head"><span class="panel-title">Live event feed</span><span class="panel-meta" id="ev-count">0 events</span></div>
-        <div class="feed" id="ev-feed"><div class="empty">No events yet</div></div>
-      </div>
-      <div class="panel">
-        <div class="panel-head"><span class="panel-title">Account age distribution</span></div>
-        <div class="panel-body"><div class="chart-wrap" style="height:220px"><canvas id="ageChart" role="img" aria-label="Account age distribution"></canvas></div></div>
-      </div>
+<!-- ══ PLAYERS ══ -->
+<div class="sec" id="sec-players">
+  <div class="p">
+    <div class="ph"><span class="pt">All players</span><span class="pm" id="plcnt">0</span></div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th>Player</th><th>Sessions</th><th>Total time</th><th>Avg session</th><th>Interactions</th><th>Coins spent</th><th>Level</th><th>Age</th><th>Last seen</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="pl-body"><tr><td colspan="11"><div class="empty">No players</div></td></tr></tbody>
+      </table>
     </div>
   </div>
-
-  <!-- ══ PLAYERS ══ -->
-  <div class="section" id="sec-players">
-    <div class="panel">
-      <div class="panel-head"><span class="panel-title">All players</span><span class="panel-meta" id="player-count-label">0 tracked</span></div>
-      <div style="overflow-x:auto">
-        <table class="tbl">
-          <thead><tr>
-            <th>Player</th><th>Sessions</th><th>Total time</th><th>Avg session</th><th>Interactions</th><th>Account age</th><th>Last seen</th>
-          </tr></thead>
-          <tbody id="player-tbody"><tr><td colspan="7"><div class="empty">No players yet</div></td></tr></tbody>
-        </table>
-      </div>
-    </div>
+  <div class="g2">
+    <div class="p"><div class="ph"><span class="pt">Account age distribution</span></div><div class="pb"><div class="cw" style="height:180px"><canvas id="c-age" role="img" aria-label="Account age distribution"></canvas></div></div></div>
+    <div class="p"><div class="ph"><span class="pt">Session length distribution</span></div><div class="pb"><div class="cw" style="height:180px"><canvas id="c-sess2" role="img" aria-label="Session length distribution"></canvas></div></div></div>
   </div>
+</div>
 
-  <!-- ══ FUNNEL ══ -->
-  <div class="section" id="sec-funnel">
-    <div class="two-col">
-      <div class="panel">
-        <div class="panel-head"><span class="panel-title">Player journey funnel</span></div>
-        <div class="panel-body" id="funnel-body"><div class="empty">Not enough data yet</div></div>
-      </div>
-      <div class="panel">
-        <div class="panel-head"><span class="panel-title">Retention — day 1 / 7 / 30</span></div>
-        <div class="panel-body">
-          <div class="three-col" style="margin-bottom:1.25rem">
-            <div class="stat" style="padding:.75rem 1rem">
-              <div class="stat-label">Day 1</div>
-              <div class="stat-val green" id="ret-d1">—</div>
-              <div class="stat-sub">returned next day</div>
-            </div>
-            <div class="stat" style="padding:.75rem 1rem">
-              <div class="stat-label">Day 7</div>
-              <div class="stat-val blue" id="ret-d7">—</div>
-              <div class="stat-sub">week retention</div>
-            </div>
-            <div class="stat" style="padding:.75rem 1rem">
-              <div class="stat-label">Day 30</div>
-              <div class="stat-val pink" id="ret-d30">—</div>
-              <div class="stat-sub">monthly retention</div>
-            </div>
-          </div>
-          <div class="chart-wrap" style="height:160px"><canvas id="retChart" role="img" aria-label="Retention rates chart"></canvas></div>
+<!-- ══ FUNNEL ══ -->
+<div class="sec" id="sec-funnel">
+  <div class="g2">
+    <div class="p"><div class="ph"><span class="pt">Player journey</span></div><div class="pb" id="funnel-body"><div class="empty">Not enough data</div></div></div>
+    <div class="p">
+      <div class="ph"><span class="pt">Retention</span></div>
+      <div class="pb">
+        <div class="g3" style="margin-bottom:1rem">
+          <div class="sc g"><div class="sc-l">Day 1</div><div class="sc-v g" id="r-d1">—</div><div class="sc-s">next day return</div></div>
+          <div class="sc bl"><div class="sc-l">Day 7</div><div class="sc-v bl" id="r-d7">—</div><div class="sc-s">week retention</div></div>
+          <div class="sc pk"><div class="sc-l">Day 30</div><div class="sc-v pk" id="r-d30">—</div><div class="sc-s">monthly retention</div></div>
         </div>
-      </div>
-    </div>
-    <div class="panel">
-      <div class="panel-head"><span class="panel-title">Monetization metrics</span><span class="panel-meta">economy data</span></div>
-      <div class="panel-body">
-        <div class="stat-row">
-          <div class="stat green"><div class="stat-label">Total revenue</div><div class="stat-val green" id="m-rev">R$0</div><div class="stat-sub">all time</div></div>
-          <div class="stat blue"><div class="stat-label">ARPU</div><div class="stat-val blue" id="m-arpu">R$0</div><div class="stat-sub">avg per user</div></div>
-          <div class="stat pink"><div class="stat-label">Paying players</div><div class="stat-val pink" id="m-pay">0%</div><div class="stat-sub">conversion</div></div>
-          <div class="stat warn"><div class="stat-label">Avg LTV</div><div class="stat-val warn" id="m-ltv">R$0</div><div class="stat-sub">lifetime value</div></div>
-        </div>
+        <div class="cw" style="height:150px"><canvas id="c-ret" role="img" aria-label="Retention chart"></canvas></div>
       </div>
     </div>
   </div>
+  <div class="p">
+    <div class="ph"><span class="pt">Monetization</span></div>
+    <div class="pb">
+      <div class="sgrid" id="mstats"></div>
+      <div class="g2">
+        <div><div style="font-family:var(--mono);font-size:.57rem;color:var(--m);letter-spacing:.09em;text-transform:uppercase;margin-bottom:.65rem">Top spenders</div><div id="top-spenders"></div></div>
+        <div><div style="font-family:var(--mono);font-size:.57rem;color:var(--m);letter-spacing:.09em;text-transform:uppercase;margin-bottom:.65rem">Hourly joins heatmap</div><div class="cw" style="height:130px"><canvas id="c-hourly" role="img" aria-label="Hourly joins"></canvas></div></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <!-- ══ PLAYER LOOKUP ══ -->
-  <div class="section" id="sec-lookup">
-    <div class="panel">
-      <div class="panel-head"><span class="panel-title">Player lookup</span></div>
-      <div class="panel-body">
-        <div class="search-row">
-          <input class="search-input" id="search-input" placeholder="Enter username or player ID..." />
-          <button class="search-btn" onclick="searchPlayer()">Search</button>
-        </div>
-        <div id="lookup-result"><div class="empty">Search for a player above to see their full profile</div></div>
+<!-- ══ LOOKUP ══ -->
+<div class="sec" id="sec-lookup">
+  <div class="p">
+    <div class="ph"><span class="pt">Player lookup</span></div>
+    <div class="pb">
+      <div class="srow">
+        <input class="sinput" id="s-input" placeholder="Username or player ID..." onkeydown="if(event.key==='Enter')search()"/>
+        <button class="btn btn-b" onclick="search()">Search</button>
       </div>
-    </div>
-    <div class="panel">
-      <div class="panel-head"><span class="panel-title">Top players by playtime</span></div>
-      <div style="overflow-x:auto">
-        <table class="tbl">
-          <thead><tr><th>#</th><th>Player</th><th>Total time</th><th>Sessions</th><th>Interactions</th><th>Status</th></tr></thead>
-          <tbody id="top-tbody"></tbody>
-        </table>
-      </div>
+      <div id="lookup-res"><div class="empty">Search a player to see their full profile</div></div>
     </div>
   </div>
+  <div class="p">
+    <div class="ph"><span class="pt">Top players by playtime</span></div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Player</th><th>Total time</th><th>Sessions</th><th>Avg</th><th>Coins spent</th><th>Purchases</th><th>Actions</th></tr></thead><tbody id="top-body"></tbody></table></div>
+  </div>
+</div>
+
+<!-- ══ MODERATION ══ -->
+<div class="sec" id="sec-moderation">
+  <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">
+    <button class="btn btn-r" onclick="showModal('ban')">+ Ban player</button>
+    <button class="btn btn-o" onclick="showModal('timeout')">+ Timeout player</button>
+    <button class="btn btn-b" onclick="showModal('blacklist')">+ Blacklist player</button>
+  </div>
+  <div class="g2">
+    <div class="p">
+      <div class="ph"><span class="pt">Banned players</span><span class="pm" id="ban-cnt">0</span></div>
+      <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Player</th><th>Reason</th><th>Banned at</th><th>Actions</th></tr></thead><tbody id="ban-body"><tr><td colspan="4"><div class="empty">No banned players</div></td></tr></tbody></table></div>
+    </div>
+    <div class="p">
+      <div class="ph"><span class="pt">Timed out</span><span class="pm" id="to-cnt">0</span></div>
+      <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Player</th><th>Reason</th><th>Until</th><th>Actions</th></tr></thead><tbody id="to-body"><tr><td colspan="4"><div class="empty">No active timeouts</div></td></tr></tbody></table></div>
+    </div>
+  </div>
+  <div class="p">
+    <div class="ph"><span class="pt">Blacklisted players</span><span class="pm" id="bl-cnt">0</span></div>
+    <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Player</th><th>Reason</th><th>Added</th><th>Actions</th></tr></thead><tbody id="bl-body"><tr><td colspan="4"><div class="empty">No blacklisted players</div></td></tr></tbody></table></div>
+  </div>
+</div>
+
+<!-- ══ CONTROLS ══ -->
+<div class="sec" id="sec-controls">
+  <div class="bcast">
+    <span style="font-family:var(--mono);font-size:.6rem;color:var(--m);white-space:nowrap">Broadcast message</span>
+    <input id="bcast-input" placeholder="Message to all players..."/>
+    <button class="btn btn-g" onclick="sendBroadcast()">Send to all</button>
+  </div>
+  <div class="ctrlgrid">
+    <div class="ctrl">
+      <div class="ctrl-t">Kick player</div>
+      <input id="kick-uid" placeholder="Player ID or username"/>
+      <input id="kick-reason" placeholder="Reason (optional)"/>
+      <button class="btn btn-r" onclick="sendKick()">Kick</button>
+    </div>
+    <div class="ctrl">
+      <div class="ctrl-t">Give coins</div>
+      <input id="coins-uid" placeholder="Player ID or username"/>
+      <input id="coins-amt" type="number" placeholder="Amount" min="1"/>
+      <button class="btn btn-g" onclick="giveCoins()">Give coins</button>
+    </div>
+    <div class="ctrl">
+      <div class="ctrl-t">Set gravity</div>
+      <input id="grav-val" type="number" placeholder="Gravity value (default 196.2)" value="196.2"/>
+      <button class="btn btn-b" onclick="setGravity()">Apply to all servers</button>
+    </div>
+    <div class="ctrl">
+      <div class="ctrl-t">Server shutdown</div>
+      <input id="shut-msg" placeholder="Shutdown message..."/>
+      <button class="btn btn-r" onclick="shutdown()">Shutdown server</button>
+    </div>
+  </div>
+  <div class="p" style="margin-top:1rem">
+    <div class="ph"><span class="pt">Command log</span></div>
+    <div class="feed" id="cmd-log"><div class="empty">No commands sent yet</div></div>
+  </div>
+</div>
 
 </div><!-- end wrap -->
 
+<!-- MODALS -->
+<div id="modal-bg" class="modal-bg" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-inner"></div>
+</div>
+
 <script>
-const params  = new URLSearchParams(location.search);
-const API_KEY = params.get('key') || '';
-const BASE    = location.origin;
+const P   = new URLSearchParams(location.search);
+const KEY = P.get('key') || '';
+const B   = location.origin;
+let D     = null;
+let cmdLog = [];
+let charts = {};
 
-let allData = null;
-let sessionsChart, avgChart, ageChart, retChart;
-
-function showTab(name) {
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['overview','players','funnel','lookup'][i] === name));
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.getElementById('sec-' + name).classList.add('active');
+function go(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('on', ['overview','players','funnel','lookup','moderation','controls'][i]===name));
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  document.getElementById('sec-'+name).classList.add('on');
 }
 
-function timeAgo(ts) {
-  const d = Math.floor(Date.now()/1000) - ts;
-  if (d < 60) return d + 's ago';
-  if (d < 3600) return Math.floor(d/60) + 'm ago';
-  if (d < 86400) return Math.floor(d/3600) + 'h ago';
-  return Math.floor(d/86400) + 'd ago';
+function fmtMins(m) { m=Math.round(m); return m<60?m+'m':Math.floor(m/60)+'h '+(m%60)+'m'; }
+function fmtTime(ts) { return ts ? new Date(ts*1000).toLocaleString() : '—'; }
+function ago(ts) {
+  if (!ts) return '—';
+  const d = Math.floor(Date.now()/1000)-ts;
+  if(d<60) return d+'s ago';
+  if(d<3600) return Math.floor(d/60)+'m ago';
+  if(d<86400) return Math.floor(d/3600)+'h ago';
+  return Math.floor(d/86400)+'d ago';
 }
-function fmtMins(m) {
-  m = Math.round(m);
-  if (m < 60) return m + 'm';
-  return Math.floor(m/60) + 'h ' + (m%60) + 'm';
-}
-function initials(name) {
-  return (name || '?').slice(0,2).toUpperCase();
-}
-function dotColor(type) {
-  if (type === 'player_join')  return '#4ade80';
-  if (type === 'player_leave') return '#fb923c';
-  if (type === 'interaction')  return '#60a5fa';
+function initials(n) { return (n||'?').slice(0,2).toUpperCase(); }
+function ec(type) {
+  if(type==='player_join') return '#22c55e';
+  if(type==='player_leave') return '#f97316';
+  if(type==='interaction') return '#3b82f6';
+  if(type==='economy') return '#a855f7';
+  if(type==='level_up') return '#06b6d4';
   return '#475569';
 }
-function typeColor(type) {
-  if (type === 'player_join')  return '#4ade80';
-  if (type === 'player_leave') return '#fb923c';
-  if (type === 'interaction')  return '#60a5fa';
-  return '#475569';
-}
-function evDesc(e) {
-  if (e.eventType === 'player_join')      return (e.data?.username||'?') + ' joined (age: ' + (e.data?.accountAge||'?') + ' days)';
-  if (e.eventType === 'player_leave')     return (e.data?.username||'?') + ' left after ' + Math.round((e.data?.sessionSecs||0)/60) + 'm';
-  if (e.eventType === 'interaction')      return (e.data?.username||'?') + ' → ' + (e.data?.action||'?');
-  if (e.eventType === 'server_heartbeat') return 'Heartbeat — ' + (e.data?.playerCount||0) + ' online';
+function ed(e) {
+  const d=e.data||{};
+  if(e.eventType==='player_join') return (d.username||'?')+' joined (acct age: '+(d.accountAge||'?')+'d, '+d.playerCount+' online)';
+  if(e.eventType==='player_leave') return (d.username||'?')+' left after '+Math.round((d.sessionSecs||0)/60)+'m';
+  if(e.eventType==='interaction') return (d.username||'?')+' → '+(d.action||'?');
+  if(e.eventType==='economy') return (d.username||'?')+' '+(d.action||'?')+' '+(d.amount||0)+' '+(d.currency||'coins')+(d.itemName?' ('+d.itemName+')':'');
+  if(e.eventType==='level_up') return (d.username||'?')+' reached level '+(d.level||'?');
+  if(e.eventType==='server_heartbeat') return 'Heartbeat — '+(d.playerCount||0)+' online';
   return e.eventType;
 }
 
-function renderStats(s) {
-  document.getElementById('active-badge').textContent = s.activePlayers + ' online';
-  document.getElementById('stat-row').innerHTML = `
-    <div class="stat green"><div class="stat-label">Active now</div><div class="stat-val green">${s.activePlayers}</div><div class="stat-sub">players online</div></div>
-    <div class="stat blue"><div class="stat-label">Total sessions</div><div class="stat-val blue">${s.totalSessions}</div><div class="stat-sub">all time</div></div>
-    <div class="stat green"><div class="stat-label">Unique players</div><div class="stat-val green">${s.uniquePlayers}</div><div class="stat-sub">distinct users</div></div>
-    <div class="stat blue"><div class="stat-label">Total playtime</div><div class="stat-val blue">${fmtMins(s.totalPlayTimeMins)}</div><div class="stat-sub">minutes played</div></div>
-    <div class="stat pink"><div class="stat-label">Peak players</div><div class="stat-val pink">${s.peakPlayers}</div><div class="stat-sub">concurrent</div></div>
-    <div class="stat warn"><div class="stat-label">Avg session</div><div class="stat-val warn">${fmtMins(s.avgSessionMins||0)}</div><div class="stat-sub">per visit</div></div>
-    <div class="stat green"><div class="stat-label">Interactions</div><div class="stat-val green">${s.totalInteractions}</div><div class="stat-sub">total events</div></div>
-  `;
+async function api(method, path, body) {
+  try {
+    const r = await fetch(B+path, {
+      method,
+      headers: { 'Content-Type':'application/json', 'x-api-key': KEY },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    return await r.json();
+  } catch(e) { console.error(e); return { success: false, error: e.message }; }
 }
 
-function renderEvents(events) {
-  document.getElementById('ev-count').textContent = events.length + ' events';
-  if (!events.length) { document.getElementById('ev-feed').innerHTML = '<div class="empty">No events yet</div>'; return; }
-  document.getElementById('ev-feed').innerHTML = events.slice(0,80).map(e => `
-    <div class="ev">
-      <div class="ev-dot" style="background:${dotColor(e.eventType)}"></div>
-      <div class="ev-body">
-        <div class="ev-type" style="color:${typeColor(e.eventType)}">${e.eventType.replace(/_/g,' ')}</div>
-        <div class="ev-desc">${evDesc(e)}</div>
-      </div>
-      <div class="ev-time">${timeAgo(e.ts)}</div>
-    </div>
-  `).join('');
-}
-
-function renderPlayers(players) {
-  document.getElementById('player-count-label').textContent = players.length + ' tracked';
-  if (!players.length) { document.getElementById('player-tbody').innerHTML = '<tr><td colspan="7"><div class="empty">No players yet</div></td></tr>'; return; }
-  document.getElementById('player-tbody').innerHTML = players.map(p => `
-    <tr>
-      <td><div class="name-cell">${p.username}</div><div class="id-cell">#${p.userId}</div></td>
-      <td><span class="pill pill-blue">${p.sessions}</span></td>
-      <td>${fmtMins(p.totalTimeMins)}</td>
-      <td>${p.avgSessionMins}m</td>
-      <td>${p.interactions}</td>
-      <td>${p.accountAge ? p.accountAge + ' days' : '—'}</td>
-      <td style="color:var(--muted)">${p.lastSeen ? timeAgo(p.lastSeen) : '—'}</td>
-    </tr>
-  `).join('');
-
-  const top = [...players].sort((a,b) => b.totalTimeMins - a.totalTimeMins).slice(0,10);
-  document.getElementById('top-tbody').innerHTML = top.map((p,i) => `
-    <tr>
-      <td style="color:var(--muted)">${i+1}</td>
-      <td><div class="name-cell">${p.username}</div><div class="id-cell">#${p.userId}</div></td>
-      <td>${fmtMins(p.totalTimeMins)}</td>
-      <td>${p.sessions}</td>
-      <td>${p.interactions}</td>
-      <td><span class="pill ${p.totalTimeMins > 60 ? 'pill-green' : 'pill-blue'}">${p.totalTimeMins > 60 ? 'veteran' : 'new'}</span></td>
-    </tr>
-  `).join('');
-}
-
-function renderFunnel(players, events) {
-  const total = players.length || 1;
-  const stayed5  = players.filter(p => p.totalTimeMins >= 5).length;
-  const stayed15 = players.filter(p => p.totalTimeMins >= 15).length;
-  const stayed30 = players.filter(p => p.totalTimeMins >= 30).length;
-  const interacted = players.filter(p => p.interactions > 0).length;
-
-  const steps = [
-    { label: 'Joined game',       count: total,    color: '#4ade80' },
-    { label: 'Stayed 5+ mins',    count: stayed5,  color: '#60a5fa' },
-    { label: 'Stayed 15+ mins',   count: stayed15, color: '#a78bfa' },
-    { label: 'Interacted',        count: interacted,color:'#f472b6' },
-    { label: 'Stayed 30+ mins',   count: stayed30, color: '#fb923c' },
-  ];
-
-  const maxCount = steps[0].count || 1;
-  document.getElementById('funnel-body').innerHTML = steps.map((s, i) => {
-    const pct = Math.round(s.count / maxCount * 100);
-    const drop = i > 0 ? Math.round((steps[i-1].count - s.count) / maxCount * 100) : 0;
-    return `
-      <div class="funnel-step">
-        <div class="funnel-label">${s.label}</div>
-        <div class="funnel-bar-wrap">
-          <div class="funnel-bar" style="width:${pct}%;background:${s.color}20;border:1px solid ${s.color}40">
-            <span class="funnel-pct" style="color:${s.color}">${s.count} (${pct}%)</span>
-          </div>
-        </div>
-        <div class="funnel-drop">${i > 0 ? '-'+drop+'%' : ''}</div>
-      </div>
-    `;
-  }).join('');
-
-  // Retention
-  const now = Date.now()/1000;
-  const d1Players  = players.filter(p => p.sessions >= 2 && (now - p.firstSeen) > 86400).length;
-  const d7Players  = players.filter(p => p.sessions >= 2 && (now - p.firstSeen) > 604800).length;
-  const d30Players = players.filter(p => p.sessions >= 2 && (now - p.firstSeen) > 2592000).length;
-  const eligible1  = Math.max(players.filter(p => (now - p.firstSeen) > 86400).length, 1);
-  const eligible7  = Math.max(players.filter(p => (now - p.firstSeen) > 604800).length, 1);
-  const eligible30 = Math.max(players.filter(p => (now - p.firstSeen) > 2592000).length, 1);
-
-  const r1  = Math.round(d1Players  / eligible1  * 100);
-  const r7  = Math.round(d7Players  / eligible7  * 100);
-  const r30 = Math.round(d30Players / eligible30 * 100);
-
-  document.getElementById('ret-d1').textContent  = r1  + '%';
-  document.getElementById('ret-d7').textContent  = r7  + '%';
-  document.getElementById('ret-d30').textContent = r30 + '%';
-
-  if (retChart) retChart.destroy();
-  retChart = new Chart(document.getElementById('retChart'), {
-    type: 'bar',
-    data: {
-      labels: ['Day 1', 'Day 7', 'Day 30'],
-      datasets: [{ data: [r1, r7, r30], backgroundColor: ['#4ade8033','#60a5fa33','#f472b633'], borderColor: ['#4ade80','#60a5fa','#f472b6'], borderWidth: 1, borderRadius: 4 }]
-    },
+function mkChart(id, type, labels, datasets, opts={}) {
+  if (charts[id]) charts[id].destroy();
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  charts[id] = new Chart(ctx, {
+    type,
+    data: { labels, datasets },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        y: { max: 100, ticks: { color: '#475569', font: { family: 'JetBrains Mono', size: 10 }, callback: v => v+'%' }, grid: { color: '#1c1f2a' } },
-        x: { ticks: { color: '#475569', font: { family: 'JetBrains Mono', size: 10 } }, grid: { display: false } }
-      }
+        y: { ticks:{color:'#64748b',font:{family:'JetBrains Mono',size:9}}, grid:{color:'#1a2035'}, ...opts.y },
+        x: { ticks:{color:'#64748b',font:{family:'JetBrains Mono',size:9},maxRotation:45}, grid:{display:false}, ...opts.x }
+      },
+      ...opts.extra
     }
   });
-
-  // Monetization (estimated from economy data in saves)
-  document.getElementById('m-rev').textContent  = 'R$' + (players.reduce((a,p) => a + (p.totalTimeMins||0), 0) * 0).toFixed(0);
-  document.getElementById('m-arpu').textContent = 'R$0';
-  document.getElementById('m-pay').textContent  = '0%';
-  document.getElementById('m-ltv').textContent  = 'R$0';
 }
 
-function renderCharts(events, players) {
-  // Sessions by hour buckets
+function renderOverview(s, events) {
+  document.getElementById('abadge').textContent = s.activePlayers+' online';
+  document.getElementById('ubadge').textContent = s.uniquePlayers+' unique';
+  document.getElementById('sgrid').innerHTML = `
+    <div class="sc g"><div class="sc-l">Active now</div><div class="sc-v g">${s.activePlayers}</div><div class="sc-s">players online</div></div>
+    <div class="sc bl"><div class="sc-l">Total sessions</div><div class="sc-v bl">${s.totalSessions}</div><div class="sc-s">all time</div></div>
+    <div class="sc g"><div class="sc-l">Unique players</div><div class="sc-v g">${s.uniquePlayers}</div><div class="sc-s">distinct users</div></div>
+    <div class="sc or"><div class="sc-l">Total playtime</div><div class="sc-v or">${fmtMins(s.totalPlayTimeMins)}</div><div class="sc-s">minutes played</div></div>
+    <div class="sc pk"><div class="sc-l">Peak concurrent</div><div class="sc-v pk">${s.peakPlayers}</div><div class="sc-s">most at once</div></div>
+    <div class="sc cy"><div class="sc-l">Avg session</div><div class="sc-v cy">${fmtMins(s.avgSessionMins)}</div><div class="sc-s">per visit</div></div>
+    <div class="sc pu"><div class="sc-l">Interactions</div><div class="sc-v pu">${s.totalInteractions}</div><div class="sc-s">total events</div></div>
+    <div class="sc bl"><div class="sc-l">Revenue</div><div class="sc-v bl">${s.monetization.totalRevenue}</div><div class="sc-s">coins spent</div></div>
+  `;
+
+  // Live players
+  const lp = s.currentPlayers||[];
+  document.getElementById('lp-count').textContent = lp.length+' online';
+  document.getElementById('lp-list').innerHTML = lp.length
+    ? lp.map(p=>`<span class="lptag">${p.username||'?'}</span>`).join('')
+    : '<span style="font-family:var(--mono);font-size:.62rem;color:var(--m);padding:.5rem">Nobody online</span>';
+
+  // Events
+  document.getElementById('evcnt').textContent = events.length+' events';
+  document.getElementById('ev-feed').innerHTML = events.length
+    ? events.slice(0,80).map(e=>`<div class="ev"><div class="evd" style="background:${ec(e.eventType)}"></div><div class="evb"><div class="evt" style="color:${ec(e.eventType)}">${e.eventType.replace(/_/g,' ')}</div><div class="evx">${ed(e)}</div></div><div class="evt2">${ago(e.ts)}</div></div>`).join('')
+    : '<div class="empty">No events yet</div>';
+
+  // Action breakdown
+  const ab = s.actionBreakdown||{};
+  const abEntries = Object.entries(ab).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const maxAb = abEntries[0]?.[1]||1;
+  document.getElementById('ab-body').innerHTML = abEntries.length
+    ? abEntries.map(([a,c])=>`<div class="abar"><div class="abl">${a}</div><div class="abw"><div class="abf" style="width:${Math.round(c/maxAb*100)}%"></div></div><div class="abv">${c}</div></div>`).join('')
+    : '<div class="empty">No interactions tracked yet</div>';
+
+  // Sessions chart
   const now = Date.now()/1000;
-  const buckets = 12;
-  const bucketSize = 3600;
-  const labels = [];
-  const counts = [];
-  const avgTimes = [];
-
-  for (let i = buckets-1; i >= 0; i--) {
-    const bucketStart = now - (i+1)*bucketSize;
-    const bucketEnd   = now - i*bucketSize;
-    const label = new Date(bucketStart*1000).getHours() + ':00';
-    labels.push(label);
-    const joinEvents = events.filter(e => e.eventType === 'player_join' && e.ts >= bucketStart && e.ts < bucketEnd);
-    counts.push(joinEvents.length);
-    const leavesInBucket = events.filter(e => e.eventType === 'player_leave' && e.ts >= bucketStart && e.ts < bucketEnd);
-    const avgSecs = leavesInBucket.length ? leavesInBucket.reduce((a,e) => a+(e.data?.sessionSecs||0),0)/leavesInBucket.length : 0;
-    avgTimes.push(Math.round(avgSecs/60));
-  }
-
-  document.getElementById('chart-meta').textContent = 'last 12 hours';
-
-  if (sessionsChart) sessionsChart.destroy();
-  sessionsChart = new Chart(document.getElementById('sessionsChart'), {
-    type: 'bar',
-    data: { labels, datasets: [{ label:'Sessions', data: counts, backgroundColor:'#4ade8022', borderColor:'#4ade80', borderWidth:1, borderRadius:3 }] },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{display:false} },
-      scales:{
-        y:{ ticks:{color:'#475569',font:{family:'JetBrains Mono',size:10}}, grid:{color:'#1c1f2a'} },
-        x:{ ticks:{color:'#475569',font:{family:'JetBrains Mono',size:10},maxRotation:45,autoSkip:false}, grid:{display:false} }
-      }
-    }
-  });
-
-  if (avgChart) avgChart.destroy();
-  avgChart = new Chart(document.getElementById('avgChart'), {
-    type: 'line',
-    data: { labels, datasets: [{ label:'Avg mins', data: avgTimes, borderColor:'#60a5fa', backgroundColor:'#60a5fa11', fill:true, tension:.4, pointRadius:3, pointBackgroundColor:'#60a5fa' }] },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{display:false} },
-      scales:{
-        y:{ ticks:{color:'#475569',font:{family:'JetBrains Mono',size:10},callback:v=>v+'m'}, grid:{color:'#1c1f2a'} },
-        x:{ ticks:{color:'#475569',font:{family:'JetBrains Mono',size:10},maxRotation:45,autoSkip:false}, grid:{display:false} }
-      }
-    }
-  });
-
-  // Account age histogram
-  const ageBuckets = [
-    { label:'<30d',  min:0,    max:30   },
-    { label:'1-3mo', min:30,   max:90   },
-    { label:'3-6mo', min:90,   max:180  },
-    { label:'6-12mo',min:180,  max:365  },
-    { label:'1-2yr', min:365,  max:730  },
-    { label:'2yr+',  min:730,  max:99999},
-  ];
-  const ageCounts = ageBuckets.map(b => players.filter(p => (p.accountAge||0) >= b.min && (p.accountAge||0) < b.max).length);
-
-  if (ageChart) ageChart.destroy();
-  ageChart = new Chart(document.getElementById('ageChart'), {
-    type: 'bar',
-    data: { labels: ageBuckets.map(b=>b.label), datasets:[{ data:ageCounts, backgroundColor:'#a78bfa22', borderColor:'#a78bfa', borderWidth:1, borderRadius:3 }] },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{display:false} },
-      scales:{
-        y:{ ticks:{color:'#475569',font:{family:'JetBrains Mono',size:10}}, grid:{color:'#1c1f2a'} },
-        x:{ ticks:{color:'#475569',font:{family:'JetBrains Mono',size:10}}, grid:{display:false} }
-      }
-    }
-  });
+  const hrs = Array.from({length:12},(_,i)=>i);
+  const hLabels = hrs.map(i=>{const h=new Date((now-(11-i)*3600)*1000).getHours();return h+':00'});
+  const hCounts = hrs.map(i=>{const s=now-(12-i)*3600,e=now-(11-i)*3600;return events.filter(ev=>ev.eventType==='player_join'&&ev.ts>=s&&ev.ts<e).length});
+  document.getElementById('chmeta').textContent = 'last 12h';
+  mkChart('c-sess','bar',hLabels,[{data:hCounts,backgroundColor:'#22c55e22',borderColor:'#22c55e',borderWidth:1,borderRadius:3}]);
 }
 
-function searchPlayer() {
-  const q = document.getElementById('search-input').value.trim().toLowerCase();
-  if (!q || !allData) return;
-  const p = allData.players.find(p => p.username.toLowerCase().includes(q) || String(p.userId).includes(q));
-  if (!p) {
-    document.getElementById('lookup-result').innerHTML = '<div class="empty">No player found for "' + q + '"</div>';
-    return;
-  }
-  const playerEvents = allData.recentEvents.filter(e => e.data?.userId === p.userId).slice(0,20);
-  document.getElementById('lookup-result').innerHTML = `
-    <div class="player-card">
-      <div class="pc-header">
-        <div class="pc-avatar">${initials(p.username)}</div>
+function renderPlayers(players) {
+  document.getElementById('plcnt').textContent = players.length+' tracked';
+  document.getElementById('pl-body').innerHTML = players.length
+    ? players.map(p=>`<tr>
+        <td><div class="tn">${p.username}</div><div class="tid">#${p.userId}</div></td>
+        <td><span class="pill pb2">${p.sessions}</span></td>
+        <td>${fmtMins(p.totalTimeMins)}</td>
+        <td>${p.avgSessionMins}m</td>
+        <td>${p.interactions}</td>
+        <td>${p.coinsSpent||0}</td>
+        <td>${p.levelsReached?.length>0?Math.max(...p.levelsReached):'—'}</td>
+        <td>${p.accountAge!=null?p.accountAge+'d':'—'}</td>
+        <td>${ago(p.lastSeen)}</td>
+        <td>${p.isBanned?'<span class="pill pr">banned</span>':p.isTimedOut?'<span class="pill po">timeout</span>':p.isBlacklisted?'<span class="pill ppu">blacklist</span>':'<span class="pill pg">ok</span>'}</td>
+        <td><div style="display:flex;gap:.3rem"><button class="btn" onclick="quickLookup(${p.userId})">Profile</button><button class="btn btn-r" onclick="quickBan(${p.userId},'${p.username}')">Ban</button></div></td>
+      </tr>`).join('')
+    : '<tr><td colspan="11"><div class="empty">No players yet</div></td></tr>';
+
+  // Age chart
+  const ageBuckets=[{l:'<30d',n:0,x:30},{l:'1-3mo',n:30,x:90},{l:'3-6mo',n:90,x:180},{l:'6-12mo',n:180,x:365},{l:'1-2yr',n:365,x:730},{l:'2yr+',n:730,x:99999}];
+  const ageCounts=ageBuckets.map(b=>players.filter(p=>p.accountAge!=null&&p.accountAge>=b.n&&p.accountAge<b.x).length);
+  mkChart('c-age','bar',ageBuckets.map(b=>b.l),[{data:ageCounts,backgroundColor:'#a855f722',borderColor:'#a855f7',borderWidth:1,borderRadius:3}]);
+
+  // Session length
+  const sl=[{l:'<5m',n:0,x:5},{l:'5-15m',n:5,x:15},{l:'15-30m',n:15,x:30},{l:'30-60m',n:30,x:60},{l:'1-2h',n:60,x:120},{l:'2h+',n:120,x:9999}];
+  const slC=sl.map(b=>players.filter(p=>p.avgSessionMins>=b.n&&p.avgSessionMins<b.x).length);
+  mkChart('c-sess2','bar',sl.map(b=>b.l),[{data:slC,backgroundColor:'#06b6d422',borderColor:'#06b6d4',borderWidth:1,borderRadius:3}]);
+}
+
+function renderFunnel(players, events, s) {
+  const tot=players.length||1;
+  const stayed5=players.filter(p=>p.totalTimeMins>=5).length;
+  const stayed15=players.filter(p=>p.totalTimeMins>=15).length;
+  const stayed30=players.filter(p=>p.totalTimeMins>=30).length;
+  const interacted=players.filter(p=>p.interactions>0).length;
+  const spent=players.filter(p=>p.coinsSpent>0).length;
+  const steps=[
+    {l:'Joined game',c:tot,col:'#22c55e'},
+    {l:'Stayed 5+ mins',c:stayed5,col:'#3b82f6'},
+    {l:'Interacted',c:interacted,col:'#a855f7'},
+    {l:'Stayed 15+ mins',c:stayed15,col:'#06b6d4'},
+    {l:'Spent currency',c:spent,col:'#f97316'},
+    {l:'Stayed 30+ mins',c:stayed30,col:'#ec4899'},
+  ];
+  const maxC=steps[0].c||1;
+  document.getElementById('funnel-body').innerHTML=steps.map((st,i)=>{
+    const pct=Math.round(st.c/maxC*100);
+    const drop=i>0?Math.round((steps[i-1].c-st.c)/maxC*100):0;
+    return `<div class="fstep"><div class="fl">${st.l}</div><div class="fbw"><div class="fb" style="width:${pct}%;background:${st.col}18;border:1px solid ${st.col}40"><span class="fp" style="color:${st.col}">${st.c} (${pct}%)</span></div></div><div class="fdrop">${i>0?'-'+drop+'%':''}</div></div>`;
+  }).join('');
+
+  // Retention
+  const ret=s.retention||{};
+  document.getElementById('r-d1').textContent=(ret.d1||0)+'%';
+  document.getElementById('r-d7').textContent=(ret.d7||0)+'%';
+  document.getElementById('r-d30').textContent=(ret.d30||0)+'%';
+  mkChart('c-ret','bar',['Day 1','Day 7','Day 30'],[{data:[ret.d1||0,ret.d7||0,ret.d30||0],backgroundColor:['#22c55e33','#3b82f633','#ec489933'],borderColor:['#22c55e','#3b82f6','#ec4899'],borderWidth:1,borderRadius:4}],{y:{max:100,ticks:{callback:v=>v+'%',color:'#64748b',font:{family:'JetBrains Mono',size:9}},grid:{color:'#1a2035'}},x:{ticks:{color:'#64748b',font:{family:'JetBrains Mono',size:9}},grid:{display:false}}});
+
+  // Monetization
+  const m=s.monetization||{};
+  document.getElementById('mstats').innerHTML=`
+    <div class="sc pu"><div class="sc-l">Total revenue</div><div class="sc-v pu">${m.totalRevenue||0} coins</div><div class="sc-s">all currency spent</div></div>
+    <div class="sc g"><div class="sc-l">ARPU</div><div class="sc-v g">${m.arpu||0}</div><div class="sc-s">avg revenue/user</div></div>
+    <div class="sc or"><div class="sc-l">Paying players</div><div class="sc-v or">${m.payingPlayers||0}</div><div class="sc-s">${m.conversionRate||0}% conversion</div></div>
+    <div class="sc pk"><div class="sc-l">LTV</div><div class="sc-v pk">${m.ltv||0}</div><div class="sc-s">lifetime value</div></div>
+    <div class="sc cy"><div class="sc-l">Total purchases</div><div class="sc-v cy">${m.totalPurchases||0}</div><div class="sc-s">transactions</div></div>
+  `;
+
+  // Top spenders
+  const spenders=[...players].sort((a,b)=>(b.coinsSpent||0)-(a.coinsSpent||0)).slice(0,8);
+  document.getElementById('top-spenders').innerHTML=spenders.length
+    ? spenders.map((p,i)=>`<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem;font-family:var(--mono);font-size:.65rem"><span style="color:var(--m);width:16px">${i+1}</span><span style="color:var(--bl);flex:1">${p.username}</span><span style="color:var(--pu)">${p.coinsSpent||0} coins</span></div>`).join('')
+    : '<div class="empty" style="padding:.75rem">No spending data</div>';
+
+  // Hourly heatmap
+  const hj=s.hourlyJoins||new Array(24).fill(0);
+  const hlabs=Array.from({length:24},(_,i)=>i+':00');
+  mkChart('c-hourly','bar',hlabs,[{data:hj,backgroundColor:'#3b82f622',borderColor:'#3b82f6',borderWidth:1,borderRadius:2}]);
+}
+
+function renderLookupTop(players) {
+  const top=[...players].sort((a,b)=>b.totalTimeMins-a.totalTimeMins).slice(0,15);
+  document.getElementById('top-body').innerHTML=top.map((p,i)=>`<tr>
+    <td style="color:var(--m)">${i+1}</td>
+    <td><div class="tn">${p.username}</div><div class="tid">#${p.userId}</div></td>
+    <td>${fmtMins(p.totalTimeMins)}</td>
+    <td>${p.sessions}</td>
+    <td>${p.avgSessionMins}m</td>
+    <td>${p.coinsSpent||0}</td>
+    <td>${p.purchases?.length||0}</td>
+    <td><div style="display:flex;gap:.3rem"><button class="btn" onclick="quickLookup(${p.userId})">Profile</button><button class="btn btn-r" onclick="quickBan(${p.userId},'${p.username}')">Ban</button></div></td>
+  </tr>`).join('');
+}
+
+async function search() {
+  const q=(document.getElementById('s-input').value||'').trim().toLowerCase();
+  if(!q||!D) return;
+  const p=D.players.find(p=>p.username.toLowerCase().includes(q)||String(p.userId).includes(q));
+  renderPlayerCard(p, D.recentEvents);
+}
+
+function quickLookup(userId) {
+  go('lookup');
+  const p=D?.players.find(p=>p.userId===userId);
+  renderPlayerCard(p, D?.recentEvents||[]);
+}
+
+function renderPlayerCard(p, events) {
+  if(!p){document.getElementById('lookup-res').innerHTML='<div class="empty">Player not found</div>';return;}
+  const pevs=(events||[]).filter(e=>e.data?.userId===p.userId).slice(0,30);
+  const topActions=Object.entries(p.actionCounts||{}).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  document.getElementById('lookup-res').innerHTML=`
+    <div class="pc">
+      <div class="pch">
+        <div class="pcav">${initials(p.username)}</div>
         <div>
-          <div class="pc-name">${p.username}</div>
-          <div class="pc-id">User ID: ${p.userId} &nbsp;·&nbsp; Account age: ${p.accountAge||'?'} days &nbsp;·&nbsp; ${p.membership||'Free'}</div>
+          <div class="pcn">${p.username}</div>
+          <div class="pcid">ID: ${p.userId} &nbsp;·&nbsp; Age: ${p.accountAge!=null?p.accountAge+'d':'?'} &nbsp;·&nbsp; ${p.membership||'Free'} &nbsp;·&nbsp; First seen: ${fmtTime(p.firstSeen)}</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:.4rem;flex-wrap:wrap">
+          ${p.isBanned?'<span class="pill pr">banned</span>':''}
+          ${p.isTimedOut?'<span class="pill po">timed out</span>':''}
+          ${p.isBlacklisted?'<span class="pill ppu">blacklisted</span>':''}
         </div>
       </div>
-      <div class="pc-stats">
-        <div class="pc-stat"><div class="pc-stat-label">Total time</div><div class="pc-stat-val">${fmtMins(p.totalTimeMins)}</div></div>
-        <div class="pc-stat"><div class="pc-stat-label">Sessions</div><div class="pc-stat-val">${p.sessions}</div></div>
-        <div class="pc-stat"><div class="pc-stat-label">Avg session</div><div class="pc-stat-val">${p.avgSessionMins}m</div></div>
+      <div class="pcsg">
+        <div class="pcs"><div class="pcsl">Total time</div><div class="pcsv">${fmtMins(p.totalTimeMins)}</div></div>
+        <div class="pcs"><div class="pcsl">Sessions</div><div class="pcsv">${p.sessions}</div></div>
+        <div class="pcs"><div class="pcsl">Avg session</div><div class="pcsv">${p.avgSessionMins}m</div></div>
+        <div class="pcs"><div class="pcsl">Interactions</div><div class="pcsv">${p.interactions}</div></div>
+        <div class="pcs"><div class="pcsl">Coins spent</div><div class="pcsv" style="color:var(--pu)">${p.coinsSpent||0}</div></div>
+        <div class="pcs"><div class="pcsl">Purchases</div><div class="pcsv" style="color:var(--or)">${p.purchases?.length||0}</div></div>
       </div>
-      <div style="font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-bottom:.5rem;letter-spacing:.08em">RECENT EVENTS</div>
-      <div class="pc-timeline">
-        ${playerEvents.length ? playerEvents.map(e => `<div class="pc-ev">${timeAgo(e.ts)} &nbsp;·&nbsp; <span>${evDesc(e)}</span></div>`).join('') : '<div style="color:var(--muted);font-family:var(--mono);font-size:.65rem;padding:.5rem 0">No events recorded</div>'}
+      ${topActions.length?`<div style="margin-bottom:.75rem"><div style="font-family:var(--mono);font-size:.55rem;color:var(--m);letter-spacing:.08em;margin-bottom:.5rem">TOP ACTIONS</div>${topActions.map(([a,c])=>`<div style="font-family:var(--mono);font-size:.62rem;margin-bottom:.25rem"><span style="color:var(--bl)">${a}</span> <span style="color:var(--m)">×${c}</span></div>`).join('')}</div>`:''}
+      ${p.levelsReached?.length?`<div style="margin-bottom:.75rem;font-family:var(--mono);font-size:.62rem">Max level reached: <span style="color:var(--cy)">${Math.max(...p.levelsReached)}</span></div>`:''}
+      <div class="pcmod">
+        <button class="btn btn-r" onclick="quickBan(${p.userId},'${p.username}')">Ban</button>
+        <button class="btn btn-o" onclick="quickTimeout(${p.userId},'${p.username}')">Timeout</button>
+        <button class="btn" onclick="sendCmd({type:'kick',targetUserId:${p.userId},targetUsername:'${p.username}',reason:'Kicked by admin'})">Kick</button>
+        <button class="btn btn-b" onclick="quickBlacklist(${p.userId},'${p.username}')">Blacklist</button>
+        ${p.isBanned?`<button class="btn btn-g" onclick="unban(${p.userId})">Unban</button>`:''}
       </div>
-    </div>
-  `;
+      <div style="font-family:var(--mono);font-size:.55rem;color:var(--m);letter-spacing:.08em;margin-bottom:.4rem">RECENT ACTIVITY</div>
+      <div class="pctl">${pevs.length?pevs.map(e=>`<div class="pcev">${ago(e.ts)} &nbsp;·&nbsp; <span>${ed(e)}</span></div>`).join(''):'<div style="color:var(--m);font-family:var(--mono);font-size:.62rem;padding:.4rem 0">No events recorded</div>'}</div>
+    </div>`;
 }
 
-async function loadData() {
+async function renderModeration() {
+  const r=await api('GET','/api/moderation/list');
+  if(!r?.success)return;
+  document.getElementById('ban-cnt').textContent=r.banned.length;
+  document.getElementById('to-cnt').textContent=r.timedOut.length;
+  document.getElementById('bl-cnt').textContent=r.blacklisted.length;
+  const modTotal=r.banned.length+r.blacklisted.length;
+  const mb=document.getElementById('modbadge');
+  mb.textContent=modTotal+' moderated';
+  mb.style.display=modTotal>0?'':'none';
+
+  document.getElementById('ban-body').innerHTML=r.banned.length
+    ?r.banned.map(b=>`<tr><td><div class="tn">${b.username||'?'}</div><div class="tid">#${b.userId}</div></td><td style="color:var(--m)">${b.reason}</td><td style="color:var(--m)">${fmtTime(b.bannedAt)}</td><td><button class="btn btn-g" onclick="unban(${b.userId})">Unban</button></td></tr>`).join('')
+    :'<tr><td colspan="4"><div class="empty">No banned players</div></td></tr>';
+
+  document.getElementById('to-body').innerHTML=r.timedOut.length
+    ?r.timedOut.map(t=>`<tr><td><div class="tn">${t.username||'?'}</div><div class="tid">#${t.userId}</div></td><td style="color:var(--m)">${t.reason}</td><td style="color:var(--m)">${fmtTime(t.until)}</td><td><button class="btn btn-g" onclick="untimeout(${t.userId})">Remove</button></td></tr>`).join('')
+    :'<tr><td colspan="4"><div class="empty">No active timeouts</div></td></tr>';
+
+  document.getElementById('bl-body').innerHTML=r.blacklisted.length
+    ?r.blacklisted.map(b=>`<tr><td><div class="tn">${b.username||'?'}</div><div class="tid">#${b.userId}</div></td><td style="color:var(--m)">${b.reason}</td><td style="color:var(--m)">${fmtTime(b.addedAt)}</td><td><button class="btn btn-g" onclick="unblacklist(${b.userId})">Remove</button></td></tr>`).join('')
+    :'<tr><td colspan="4"><div class="empty">No blacklisted players</div></td></tr>';
+}
+
+// Modal system
+function showModal(type) {
+  const modals={
+    ban:`<h3>Ban player</h3>
+      <div class="field"><label>Player ID</label><input id="m-uid" placeholder="UserId"/></div>
+      <div class="field"><label>Username</label><input id="m-uname" placeholder="Username"/></div>
+      <div class="field"><label>Reason</label><input id="m-reason" placeholder="Reason for ban"/></div>
+      <div class="mrow"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-r" onclick="submitBan()">Ban player</button></div>`,
+    timeout:`<h3>Timeout player</h3>
+      <div class="field"><label>Player ID</label><input id="m-uid" placeholder="UserId"/></div>
+      <div class="field"><label>Username</label><input id="m-uname" placeholder="Username"/></div>
+      <div class="field"><label>Duration (minutes)</label><input id="m-mins" type="number" placeholder="e.g. 30" min="1"/></div>
+      <div class="field"><label>Reason</label><input id="m-reason" placeholder="Reason"/></div>
+      <div class="mrow"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-o" onclick="submitTimeout()">Timeout player</button></div>`,
+    blacklist:`<h3>Blacklist player</h3>
+      <div class="field"><label>Player ID</label><input id="m-uid" placeholder="UserId"/></div>
+      <div class="field"><label>Username</label><input id="m-uname" placeholder="Username"/></div>
+      <div class="field"><label>Reason</label><input id="m-reason" placeholder="Reason"/></div>
+      <div class="mrow"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-b" onclick="submitBlacklist()">Blacklist</button></div>`,
+  };
+  document.getElementById('modal-inner').innerHTML=modals[type]||'';
+  document.getElementById('modal-bg').style.display='flex';
+}
+function closeModal(){document.getElementById('modal-bg').style.display='none';}
+
+function quickBan(uid,uname){showModal('ban');setTimeout(()=>{const u=document.getElementById('m-uid');const n=document.getElementById('m-uname');if(u)u.value=uid;if(n)n.value=uname;},50);}
+function quickTimeout(uid,uname){showModal('timeout');setTimeout(()=>{const u=document.getElementById('m-uid');const n=document.getElementById('m-uname');if(u)u.value=uid;if(n)n.value=uname;},50);}
+function quickBlacklist(uid,uname){showModal('blacklist');setTimeout(()=>{const u=document.getElementById('m-uid');const n=document.getElementById('m-uname');if(u)u.value=uid;if(n)n.value=uname;},50);}
+
+async function submitBan(){const uid=document.getElementById('m-uid')?.value;const uname=document.getElementById('m-uname')?.value;const reason=document.getElementById('m-reason')?.value;if(!uid)return;const r=await api('POST','/api/moderation/ban',{userId:parseInt(uid),username:uname,reason});closeModal();if(r?.success){addCmdLog('BAN','Banned '+uname+' ('+uid+') — '+reason);await renderModeration();}else alert('Error: '+(r?.error||'failed'));}
+async function submitTimeout(){const uid=document.getElementById('m-uid')?.value;const uname=document.getElementById('m-uname')?.value;const mins=document.getElementById('m-mins')?.value;const reason=document.getElementById('m-reason')?.value;if(!uid||!mins)return;const r=await api('POST','/api/moderation/timeout',{userId:parseInt(uid),username:uname,minutes:parseInt(mins),reason});closeModal();if(r?.success){addCmdLog('TIMEOUT',uname+' timed out '+mins+'m — '+reason);await renderModeration();}else alert('Error: '+(r?.error||'failed'));}
+async function submitBlacklist(){const uid=document.getElementById('m-uid')?.value;const uname=document.getElementById('m-uname')?.value;const reason=document.getElementById('m-reason')?.value;if(!uid)return;const r=await api('POST','/api/moderation/blacklist',{userId:parseInt(uid),username:uname,reason});closeModal();if(r?.success){addCmdLog('BLACKLIST',uname+' blacklisted — '+reason);await renderModeration();}else alert('Error: '+(r?.error||'failed'));}
+async function unban(uid){if(!confirm('Remove ban?'))return;await api('DELETE','/api/moderation/ban/'+uid);addCmdLog('UNBAN','Removed ban for #'+uid);await renderModeration();}
+async function untimeout(uid){await api('DELETE','/api/moderation/timeout/'+uid);addCmdLog('UNTIMEOUT','Removed timeout for #'+uid);await renderModeration();}
+async function unblacklist(uid){await api('DELETE','/api/moderation/blacklist/'+uid);addCmdLog('UNBLACKLIST','Removed blacklist for #'+uid);await renderModeration();}
+
+async function sendCmd(cmd){const r=await api('POST','/api/commands/send',cmd);if(r?.success)addCmdLog(cmd.type.toUpperCase(),JSON.stringify(cmd));else alert('Error: '+(r?.error||'failed'));}
+async function sendBroadcast(){const msg=document.getElementById('bcast-input').value;if(!msg)return;await sendCmd({type:'broadcast',data:{message:msg}});document.getElementById('bcast-input').value='';}
+async function sendKick(){const uid=document.getElementById('kick-uid').value;const reason=document.getElementById('kick-reason').value;if(!uid)return;const p=D?.players.find(p=>p.username.toLowerCase()===uid.toLowerCase()||String(p.userId)===uid);const targetUserId=p?p.userId:parseInt(uid);await sendCmd({type:'kick',targetUserId,targetUsername:p?.username||uid,reason:reason||'Kicked by admin'});document.getElementById('kick-uid').value='';document.getElementById('kick-reason').value='';}
+async function giveCoins(){const uid=document.getElementById('coins-uid').value;const amt=parseInt(document.getElementById('coins-amt').value);if(!uid||!amt)return;const p=D?.players.find(p=>p.username.toLowerCase()===uid.toLowerCase()||String(p.userId)===uid);await sendCmd({type:'give_coins',targetUserId:p?.userId||parseInt(uid),targetUsername:p?.username||uid,data:{amount:amt}});document.getElementById('coins-uid').value='';document.getElementById('coins-amt').value='';}
+async function setGravity(){const v=parseFloat(document.getElementById('grav-val').value);await sendCmd({type:'set_gravity',data:{value:v}});}
+async function shutdown(){const msg=document.getElementById('shut-msg').value;if(!confirm('Shutdown server?'))return;await sendCmd({type:'shutdown',data:{message:msg||'Server shutting down for maintenance'}});}
+
+function addCmdLog(type,desc){cmdLog.unshift({type,desc,ts:Date.now()});if(cmdLog.length>50)cmdLog.pop();document.getElementById('cmd-log').innerHTML=cmdLog.map(c=>`<div class="ev"><div class="evd" style="background:var(--or)"></div><div class="evb"><div class="evt" style="color:var(--or)">${c.type}</div><div class="evx">${c.desc}</div></div><div class="evt2">${new Date(c.ts).toLocaleTimeString()}</div></div>`).join('');}
+
+async function load() {
   try {
-    const res = await fetch(BASE + '/api/analytics/summary', { headers: { 'x-api-key': API_KEY } });
-    const json = await res.json();
-    if (!json.success) return;
-    allData = json;
-
-    const avgMins = json.players.length ? Math.round(json.players.reduce((a,p) => a+p.totalTimeMins,0)/json.players.length) : 0;
-    json.summary.avgSessionMins = avgMins;
-
-    renderStats(json.summary);
-    renderEvents(json.recentEvents);
-    renderPlayers(json.players);
-    renderFunnel(json.players, json.recentEvents);
-    renderCharts(json.recentEvents, json.players);
-
-    document.getElementById('game-name').textContent = 'Analytics';
-  } catch(e) { console.error(e); }
+    const r=await api('GET','/api/analytics/summary');
+    if(!r?.success)return;
+    D=r;
+    renderOverview(r.summary, r.recentEvents);
+    renderPlayers(r.players);
+    renderFunnel(r.players, r.recentEvents, r.summary);
+    renderLookupTop(r.players);
+    await renderModeration();
+  } catch(e){console.error(e);}
 }
 
-async function init() {
-  await loadData();
-  document.getElementById('splash').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  setInterval(loadData, 15000);
+async function init(){
+  await load();
+  document.getElementById('splash').style.display='none';
+  document.getElementById('app').style.display='block';
+  setInterval(load,15000);
 }
-
 init();
 </script>
 </body>
